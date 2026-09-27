@@ -92,10 +92,10 @@ Write three specific, checkable triggers. Check the six yellow flags (declining 
 | Value rests on growth a decade out (Phases 1–2) | no discount is enough — size smaller instead |
 | Decline | a wide discount to **asset** value; a low P/E is not safety |
 
-**7f. Run the helper** — `scripts/valuation.py` inside this skill's own directory (the base directory shown when the skill loads; no need to search the filesystem). Python 3, standard library:
+**7f. Run the helper** at `${CLAUDE_SKILL_DIR}/scripts/valuation.py` (Python 3, standard library). Use that path as written; don't search the filesystem. If the path appears unexpanded, the script is `scripts/valuation.py` in this skill's folder.
 
 ```bash
-python3 <skill-directory>/scripts/valuation.py --price 69.62 --shares 2043 --fcf 8200 \
+python3 ${CLAUDE_SKILL_DIR}/scripts/valuation.py --price 69.62 --shares 2043 --fcf 8200 \
   --growth 0.05 0.11 0.16 --mos 0.30
 ```
 
