@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="501" viewBox="0 0 900 501" role="img" aria-labelledby="t d">
+<title id="t">Example PhaseLens Buy Plan</title><desc id="d">Example output for UBER at the September 25, 2026 close: Qualified Buy, starter buy at or below 76.47 dollars, full position at or below 68.82, trim above 154.83.</desc>
+<style>.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;white-space:pre}.f{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}</style>
+<rect x="0.75" y="0.75" width="898.5" height="499.5" rx="14" fill="#FFFFFF" stroke="#D0D7DE" stroke-width="1.5"/>
+<path d="M0.75 14.75a14 14 0 0 1 14-14h870.5a14 14 0 0 1 14 14V52H0.75z" fill="#F6F8FA"/><line x1="0.75" y1="52" x2="899.25" y2="52" stroke="#D0D7DE" stroke-width="1.5"/>
+<circle cx="28" cy="26" r="6.5" fill="#FF5F57"/><circle cx="50" cy="26" r="6.5" fill="#FEBC2E"/><circle cx="72" cy="26" r="6.5" fill="#28C840"/>
+<text class="f" x="450" y="31" font-size="14" text-anchor="middle" fill="#59636E">claude — "Is Uber a buy, and at what price?"</text>
+<text class="m" x="32" y="88" font-size="15" fill="#0F766E" font-weight="700">● phaselens</text><text class="m" x="150" y="88" font-size="15" fill="#59636E">Buy Plan · UBER · Sep 25, 2026 close</text>
+<text class="m" x="32" y="124" font-size="15" xml:space="preserve"><tspan fill="#59636E">Verdict   </tspan><tspan fill="#1A7F37">Qualified Buy</tspan><tspan fill="#1F2328">      Phase 3→4 · Setup Cat 2 · Moat B</tspan></text>
+<text class="m" x="32" y="151" font-size="15" xml:space="preserve"><tspan fill="#59636E">Price     </tspan><tspan fill="#1F2328">$69.62</tspan><tspan fill="#1F2328">   Weighted value $109.24   Discount to value 36%</tspan></text>
+<text class="m" x="32" y="178" font-size="15" xml:space="preserve"><tspan fill="#59636E">Reverse DCF </tspan><tspan fill="#1F2328">price implies 5.2%/yr owner-FCF growth vs ~70%/yr 2023–25</tspan></text>
+<text class="m" x="32" y="205" font-size="15" xml:space="preserve"><tspan fill="#1F2328"></tspan></text>
+<text class="m" x="32" y="232" font-size="15" xml:space="preserve"><tspan fill="#59636E">Starter buy   </tspan><tspan fill="#0F766E">≤ $76.47</tspan><tspan fill="#1A7F37">   ← price is here</tspan></text>
+<text class="m" x="32" y="259" font-size="15" xml:space="preserve"><tspan fill="#59636E">Full position </tspan><tspan fill="#0F766E">≤ $68.82</tspan><tspan fill="#59636E">   only if US trips grow ≥10% and buybacks resume</tspan></text>
+<text class="m" x="32" y="286" font-size="15" xml:space="preserve"><tspan fill="#59636E">Hold          </tspan><tspan fill="#1F2328">$76.47 – $109.24</tspan></text>
+<text class="m" x="32" y="313" font-size="15" xml:space="preserve"><tspan fill="#59636E">Fair          </tspan><tspan fill="#1F2328">$109.24 – $154.83</tspan></text>
+<text class="m" x="32" y="340" font-size="15" xml:space="preserve"><tspan fill="#59636E">Trim above    </tspan><tspan fill="#9A6700">$154.83</tspan></text>
+<text class="m" x="32" y="367" font-size="15" xml:space="preserve"><tspan fill="#1F2328"></tspan></text>
+<text class="m" x="32" y="394" font-size="15" xml:space="preserve"><tspan fill="#59636E">Breaks if  </tspan><tspan fill="#CF222E">1 </tspan><tspan fill="#1F2328">robotaxis go direct in a top-5 US city + trips &lt;10%</tspan></text>
+<text class="m" x="32" y="421" font-size="15" xml:space="preserve"><tspan fill="#59636E">           </tspan><tspan fill="#CF222E">2 </tspan><tspan fill="#1F2328">owner FCF falls year on year</tspan></text>
+<text class="m" x="32" y="448" font-size="15" xml:space="preserve"><tspan fill="#59636E">           </tspan><tspan fill="#CF222E">3 </tspan><tspan fill="#1F2328">revenue per booking keeps falling</tspan></text>
+<text class="f" x="32" y="479" font-size="12.5" fill="#59636E">Illustrative output from a live run. Analysis, not financial advice.</text>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "name": "phaselens",
+  "displayName": "PhaseLens",
+  "version": "1.0.0",
+  "description": "Phase-aware stock analysis: places a company in its lifecycle phase, runs a reverse DCF, and returns a verdict with exact starter-buy, full-position, hold and trim prices.",
+  "author": {
+    "name": "Arjun",
+    "url": "https://github.com/arjunpycFlow"
+  },
+  "homepage": "https://github.com/arjunpycFlow/phaselens",
+  "repository": "https://github.com/arjunpycFlow/phaselens",
+  "license": "MIT",
+  "keywords": ["investing", "stocks", "equity-research", "valuation", "reverse-dcf", "margin-of-safety", "skills"]
+}

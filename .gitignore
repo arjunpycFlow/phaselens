@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+phaselens.zip
+evals/results/
+.DS_Store

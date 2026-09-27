@@ -1,0 +1,25 @@
+name: Release
+
+# Push a tag such as v1.0.0 to publish a GitHub Release with phaselens.zip,
+# the file people upload in Claude (Customize > Skills > Upload a skill).
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build skill zip
+        run: |
+          cd skills
+          zip -r ../phaselens.zip phaselens -x '*/__pycache__/*' '*.pyc' '.DS_Store'
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: phaselens.zip
+          generate_release_notes: true

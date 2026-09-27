@@ -1,0 +1,33 @@
+name: Bug report
+description: A wrong number, a broken install, or the skill doing something it shouldn't.
+labels: [bug]
+body:
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where did it happen?
+      options:
+        - Claude Code (plugin)
+        - Claude app (uploaded skill)
+        - Agent SDK
+        - valuation.py on its own
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      description: For a wrong number, include the exact valuation.py command or the prompt you used.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PhaseLens version
+      placeholder: "1.0.0 (from claude plugin list)"
+  - type: input
+    id: model
+    attributes:
+      label: Claude model
+      placeholder: e.g. Opus, Sonnet, Haiku

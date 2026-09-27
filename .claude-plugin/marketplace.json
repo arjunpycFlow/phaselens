@@ -1,0 +1,15 @@
+{
+  "name": "phaselens",
+  "description": "PhaseLens: phase-aware stock analysis for Claude",
+  "owner": {
+    "name": "Arjun",
+    "url": "https://github.com/arjunpycFlow"
+  },
+  "plugins": [
+    {
+      "name": "phaselens",
+      "source": "./",
+      "description": "Phase-aware stock analysis: lifecycle phase, reverse DCF, and exact buy / add / trim prices for any listed company."
+    }
+  ]
+}
