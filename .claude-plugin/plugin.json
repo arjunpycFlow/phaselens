@@ -1,7 +1,7 @@
 {
   "name": "phaselens",
   "displayName": "PhaseLens",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Phase-aware stock analysis: places a company in its lifecycle phase, runs a reverse DCF, and returns a verdict with exact starter-buy, full-position, hold and trim prices.",
   "author": {
     "name": "Arjun",

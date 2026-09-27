@@ -34,6 +34,29 @@ Prices, multiples and results change daily. Use web search and primary filings (
 
 Record the raw numbers in a working file and compute from it. Mark anything unverified "n/v". Label every claim as fact (cite it), inference, or consensus.
 
+**Input audit — required before any valuation.** Valuation errors almost always come from inputs, not arithmetic. Build owner FCF yourself from cash-flow-statement line items; never take an aggregator's "free cash flow" figure. Show this table in the memo:
+
+| Input | Value | Period | Source (filing + date) |
+|---|---|---|---|
+| Price | | close date | |
+| Diluted shares (millions) | | latest 10-Q cover or diluted count | |
+| Operating cash flow | | trailing 12 months | cash-flow statement |
+| − Capital expenditures | | TTM | include capitalized software and any other capex-like lines the company reports separately |
+| − Stock-based compensation | | TTM | cash-flow statement add-back |
+| − One-offs removed | | TTM | name each one |
+| **= Owner FCF** | | | arithmetic shown |
+
+Then two checks: price × diluted shares within about 3% of a reported market cap (if not, the share count is wrong); and TTM = latest fiscal year + year-to-date − prior year-to-date. Fix any mismatch before valuing.
+
+One-off rules — apply them the same way to every company, and name each adjustment:
+
+- **Float that reverses if growth stops** (customer deposits, insurance and claims reserves, deferred-revenue jumps): remove the TTM inflow from the base case, and show the value with it left in as a labeled sensitivity. If the call changes the verdict, say so.
+- **Tax timing** (a deferred-tax or tax-payable swing far outside its 3-year range, a one-time tax-law benefit, or a final installment of a fixed tax schedule): reset to a normal year.
+- **Cash that belongs to others** (payouts to minority partners in a consolidated business): deduct it.
+- **Legal settlements, termination fees, asset-sale taxes:** remove. If a settlement is funded by a mechanism that already dilutes shareholders (for example an escrow paid by cutting share conversion rates), add it back and explain why.
+- **Acquisitions** are not capex; **capitalized software** is.
+- **Large new debt not yet in TTM interest:** deduct the annual after-tax interest.
+
 ## 1. Business
 
 One sentence: what it sells, to whom, and how it gets paid. Then revenue by segment and by geography. If it can't be said simply, stop and say the company is outside the circle of competence.

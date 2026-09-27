@@ -2,6 +2,12 @@
 
 All notable changes to PhaseLens are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] — 2026-09-27
+
+### Added
+- **Input audit**, required before any valuation: owner FCF is built from cash-flow-statement line items (operating cash flow, capex including capitalized software, stock-based compensation, named one-offs) with sources and arithmetic, plus a market-cap check on the share count and a TTM arithmetic check. A live test had shown owner FCF overstated by about 8% when an aggregator's FCF figure was used.
+- **One-off rules** applied the same way to every company: reversing float (customer deposits, insurance reserves) removed with a labeled sensitivity; tax-timing swings normalized; payouts to minority partners deducted; settlements and termination fees removed; acquisitions excluded from capex; interest on large new debt deducted.
+
 ## [1.0.2] — 2026-09-27
 
 ### Fixed
