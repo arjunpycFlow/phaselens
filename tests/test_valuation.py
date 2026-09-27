@@ -143,3 +143,11 @@ def test_bad_inputs_are_rejected_cleanly(override):
     result = run_cli(*args)
     assert result.returncode == 2
     assert "Traceback" not in result.stderr
+
+
+def test_scientific_notation_negative_growth_is_accepted():
+    # regression: argparse used to read "-6.9e-05" as an option flag
+    out = run_cli("--price", 50, "--shares", 100, "--fcf", 300,
+                  "--growth", "-6.9e-05", 0.015, 0.195, "--mos", 0.25)
+    assert out.returncode == 0, out.stderr
+    assert json.loads(out.stdout)["weighted_value"] > 0

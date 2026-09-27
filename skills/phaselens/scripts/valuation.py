@@ -19,6 +19,7 @@ Units: --shares in millions; --fcf in the same currency millions as the price.
 """
 import argparse
 import json
+import re
 import sys
 
 GROWTH_FLOOR = -0.50   # lowest stage-one growth the reverse DCF searches
@@ -162,9 +163,22 @@ def run(a):
     }
 
 
+_SCI_NEGATIVE = re.compile(r"-\d*\.?\d+[eE][-+]?\d+")
+
+
+def _normalize_negatives(argv):
+    """argparse mistakes '-6.9e-05' for an option flag; rewrite it as '-0.000069'."""
+    out = []
+    for tok in argv:
+        if _SCI_NEGATIVE.fullmatch(tok):
+            tok = f"{float(tok):.12f}".rstrip("0").rstrip(".")
+        out.append(tok)
+    return out
+
+
 def main(argv=None):
     p = build_parser()
-    a = p.parse_args(argv)
+    a = p.parse_args(_normalize_negatives(sys.argv[1:] if argv is None else argv))
     validate(p, a)
     json.dump(run(a), sys.stdout, indent=2)
     print()

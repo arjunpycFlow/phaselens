@@ -2,6 +2,12 @@
 
 All notable changes to PhaseLens are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] — 2026-09-27
+
+### Fixed
+- `valuation.py` rejected growth rates written in scientific notation with a minus sign (for example `-6.9e-05`), because the argument parser read them as option flags. They are now accepted. Found by randomized testing; regression test added.
+- `SKILL.md` now says the helper lives in the skill's own directory, so Claude runs it directly instead of searching the filesystem for it.
+
 ## [1.0.0] — 2026-09-27
 
 ### Added

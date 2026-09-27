@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/github/license/arjunpycFlow/phaselens?style=flat-square&color=0F766E)](LICENSE)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757?style=flat-square)](#install)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-SKILL.md-6E56CF?style=flat-square)](skills/phaselens/SKILL.md)
-[![Tests](https://img.shields.io/badge/tests-61%20passing-1A7F37?style=flat-square)](tests/test_valuation.py)
+[![Tests](https://img.shields.io/badge/tests-62%20passing-1A7F37?style=flat-square)](tests/test_valuation.py)
 [![Dependencies](https://img.shields.io/badge/dependencies-none-1A7F37?style=flat-square)](SECURITY.md)
 
 **[Install](#install)** · **[How it works](#how-it-works)** · **[Example](examples/uber-2026-09.md)** · **[Evals](#tested-not-just-claimed)** · **[FAQ](#faq)**
@@ -164,7 +164,7 @@ The **margin of safety scales with predictability, not excitement:** 0–10% for
 
 ## Tested, not just claimed
 
-**The math.** 61 unit tests check `valuation.py` against closed-form results: the Gordon-growth special case, a zero-growth perpetuity, reverse-DCF round trips, band ordering, and clean refusals of bad inputs such as negative cash flow. They run in CI on every push.
+**The math.** 62 unit tests check `valuation.py` against closed-form results: the Gordon-growth special case, a zero-growth perpetuity, reverse-DCF round trips, band ordering, and clean refusals of bad inputs such as negative cash flow. They run in CI on every push.
 
 **The behavior.** Five cases in [`evals/`](evals) run through [`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals). Each case runs three times **with** PhaseLens and three times **without** it, so the difference shows what the skill adds:
 
