@@ -2,6 +2,24 @@
 
 All notable changes to PhaseLens are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] — 2026-09-27
+
+Fixes from a live accuracy test. Seven real quick takes (UBER, TSLA, SpaceX, GOOGL, AMZN, JPM, O) were checked against SEC filings by an independent reviewer. The calculator was exact in every run. These rules close the gaps the test found:
+
+### Fixed
+- **Bank valuation now accounts for growth.** The justified P/TBV is now (ROTCE − g) / (COE − g), with g capped at the sustainable growth rate. The old ROTCE / COE shortcut assumed zero growth. For JPM that shortcut gave 2.0× where the correct figure is 2.67×, which put the stock about 55% above value when the real gap is about 19%.
+- **Growth-capex surge rule.** Covers Phase 3–4 companies whose owner FCF is depressed by capex above 1.5× depreciation. The model now shows both trough owner FCF and owner earnings (OCF − depreciation − SBC), cross-checks against a P/E on normalized EPS that strips every quarter's investment gains, and never uses price/sales for a company with positive operating income. Before this rule, Tesla, Alphabet and Amazon were each valued with a different improvised method.
+- **REITs.** Stock-based compensation that is added back in AFFO is now deducted again. Growth is modeled per share, and forward-sale shares are counted.
+
+### Added
+- **More input audit rows.** The audit now records the largest working-capital lines (anything above 10% of OCF, named, with a call made on each) and net cash or net debt from the balance sheet. A "no one-offs" entry is no longer allowed until the working-capital lines have been reviewed. In the test, Uber's ~$2.0B insurance-reserve float had been missed, and Amazon had been wrongly called net cash.
+- **Price date rule.** The price must be the last completed session's close, labeled with its date and weekday. Four of the seven runs had labeled prices with weekend dates.
+- **Fresh-filing rule.** After an IPO, merger or capital raise, figures must come from the post-event filing. SpaceX's cash had been quoted from before its IPO.
+- **Justification for off-table margins.** Any margin of safety outside the table now needs a one-line reason.
+- **Consistent bands.** The Buy Plan's hold and fair bands are now written as starter→weighted and weighted→bull.
+- **Bank eval grader** that requires a growth-adjusted multiple (3/3 passes).
+- **README.** New "What it costs to run" section with measured costs, and the live-accuracy results.
+
 ## [1.1.0] — 2026-09-27
 
 ### Added

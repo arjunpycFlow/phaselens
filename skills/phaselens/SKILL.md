@@ -38,15 +38,17 @@ Record the raw numbers in a working file and compute from it. Mark anything unve
 
 | Input | Value | Period | Source (filing + date) |
 |---|---|---|---|
-| Price | | close date | |
-| Diluted shares (millions) | | latest 10-Q cover or diluted count | |
+| Price | | last completed session's close — give the date and weekday | a weekend or holiday date means the price is wrong |
+| Diluted shares (millions) | | the larger of the latest 10-Q cover count and the diluted weighted average — say which | |
 | Operating cash flow | | trailing 12 months | cash-flow statement |
 | − Capital expenditures | | TTM | include capitalized software and any other capex-like lines the company reports separately |
 | − Stock-based compensation | | TTM | cash-flow statement add-back |
 | − One-offs removed | | TTM | name each one |
+| Largest working-capital lines | | TTM | every cash-flow line above 10% of OCF, named, with the call made on it |
+| Net cash / (net debt) | | latest balance sheet | cash + marketable securities − total debt, from the balance sheet |
 | **= Owner FCF** | | | arithmetic shown |
 
-Then two checks: price × diluted shares within about 3% of a reported market cap (if not, the share count is wrong); and TTM = latest fiscal year + year-to-date − prior year-to-date. Fix any mismatch before valuing.
+Then three checks: price × diluted shares within about 3% of a reported market cap on the same date (if not, the share count is wrong); TTM = latest fiscal year + year-to-date − prior year-to-date; and every balance-sheet claim in the memo ("net cash", "cash on hand") matches the latest balance sheet, not an older one. Fix any mismatch before valuing. "None" is not an acceptable one-offs entry until the working-capital row has been filled in.
 
 One-off rules — apply them the same way to every company, and name each adjustment:
 
@@ -124,7 +126,9 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/valuation.py --price 69.62 --shares 2043 --f
 
 `--shares` in millions; `--fcf` is owner FCF in millions of the price's currency. Optional: `--rate` (default 0.10), `--terminal` (0.03), `--years` (10). It prints price/owner-FCF, implied growth at 8/10/12%, bear/base/bull value per share, the weighted value, the bands, the current discount to value and which zone today's price is in. It refuses inputs where a DCF doesn't apply (non-positive FCF, unordered scenarios) — follow the phase's other methods then.
 
-**Phases 1–2 (and any company with negative owner FCF) — no DCF, no script.** Don't discount projected cash flows; the inputs don't exist yet. Instead:
+**Growth-capex surge in a Phase 3–4 business.** When a profitable company's capex runs above 1.5× depreciation and that — not losses — is what depresses or turns negative its owner FCF, neither the trough FCF nor price/sales is the right base. Run the script twice and show both: (1) TTM owner FCF, labeled "trough"; (2) owner earnings = OCF − depreciation (as maintenance-capex proxy) − SBC, labeled "if the build-out earns its cost of capital". Cross-check with a P/E on **normalized** EPS (strip every mark-to-market investment gain in each of the four TTM quarters, not just the latest). Anchor the bands to (1) unless there is disclosed evidence the new capacity is already earning — backlog, contracted revenue, segment margins — and say which you chose. Never value a company with positive operating income on price/sales.
+
+**Phases 1–2 (and any company with negative owner FCF from losses) — no DCF, no script.** Don't discount projected cash flows; the inputs don't exist yet. Instead:
 
 1. Today's price/sales and price/gross profit against the company's own history and 2–3 peers.
 2. A five-year scenario: bear / base / bull revenue × a mature-company price/sales (or price/gross-profit) multiple → future market cap, discounted back five years at the hurdle, less dilution.
@@ -163,7 +167,7 @@ Price now: $__    | Weighted value: $__ | Discount to value now: __% (negative =
 Implied growth @10%: __% vs actual 5-yr owner-FCF growth __%
 Starter buy ≤ $__ (size __%)
 Full position ≤ $__ (size __%) — only if: <thesis-intact checks>
-Hold: $__–$__   | Fair: $__–$__   | Trim above: $__
+Hold: $starter–$weighted   | Fair: $weighted–$bull   | Trim above: $bull
 Thesis-break triggers: 1) 2) 3)
 Next catalyst / re-check date: __
 ```
@@ -175,5 +179,6 @@ Next catalyst / re-check date: __
 - Never predict prices or dates; give scenario ranges with their assumptions.
 - No technical indicators as the basis for a call.
 - A lower price adds value only if the thesis still holds at that price.
-- State the hurdle rate and margin of safety used.
+- State the hurdle rate and margin of safety used. A margin of safety outside the 7e row for the business needs a one-line reason.
+- Use the latest filing for every figure; after an IPO, merger or large raise, re-check cash, debt and share count against the post-event filing.
 - Close with: this is analysis, not financial advice; the decision is the investor's.

@@ -30,7 +30,8 @@ No DCF. Use the phase's methods: price/sales or price/gross profit against the c
 
 FCF and enterprise value don't apply.
 
-- Value on **price / tangible book** against **return on tangible equity − cost of equity**. A bank that earns 15% on tangible equity with a 10% cost of equity deserves roughly 1.5× tangible book.
+- Value on **price / tangible book**. Justified P/TBV = (ROTCE − g) / (COE − g), where g is long-run growth in tangible book and must not exceed ROTCE × (1 − total payout ratio, dividends plus buybacks). Example: 20% ROTCE, 10% cost of equity, 4% growth → (0.20 − 0.04) / (0.10 − 0.04) = 2.67× tangible book. The zero-growth shortcut ROTCE / COE (2.0× here) undervalues any bank that grows, so never use it.
+- Use normalized ROTCE (strip one-time gains such as security sales or share-exchange gains) and a through-cycle credit cost. Build bear / base / bull from (ROTCE, COE, g) triples, value each as multiple × tangible book per share, weight 25 / 50 / 25, then apply the margin of safety as usual.
 - Check CET1 capital against the regulatory minimum and the bank's target, deposit mix and cost, credit losses through a cycle, and unrealized losses on securities.
 
 ## Insurers
@@ -40,7 +41,8 @@ FCF and enterprise value don't apply.
 
 ## REITs
 
-- Use **AFFO** (adjusted funds from operations: net income + depreciation − maintenance capex − straight-line rent adjustments) against market cap, and price / net asset value.
+- Use **AFFO** (adjusted funds from operations: net income + depreciation − maintenance capex − straight-line rent adjustments) against market cap, and price / net asset value. Most REITs add back stock-based compensation in AFFO: subtract it again, as with owner FCF.
+- REITs grow by issuing shares, so base growth scenarios on AFFO **per share**, not total AFFO, and count unsettled forward-sale shares in the share count.
 - Check leverage (net debt / EBITDA), debt maturities, occupancy and lease terms.
 
 ## Utilities

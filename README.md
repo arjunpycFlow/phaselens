@@ -178,6 +178,16 @@ The **margin of safety scales with predictability, not excitement:** 0–10% for
 
 The skill triggered on **12 of 12** stock questions and on **0 of 3** off-topic runs. Where both columns score 1.00, Claude already gets it right on its own and PhaseLens keeps it that way. Results are from September 27, 2026; rerun them with `make eval`.
 
+**Live accuracy.** Seven real quick takes (Uber, Tesla, SpaceX, Alphabet, Amazon, JPMorgan and Realty Income) were checked against SEC filings by a separate reviewer. Every calculator result matched to the cent, and most filing inputs were exact. The misses were:
+
+- closing prices labeled with weekend dates
+- a bank multiple that ignored growth
+- one missed insurance-reserve float
+- an earnings figure that removed only one quarter's investment gain
+- a "net cash" claim contradicted by the balance sheet
+
+Version 1.2.0 turned each miss into a rule. The details are in the [changelog](CHANGELOG.md).
+
 ## Using it
 
 Ask naturally. Any of these trigger the skill:
@@ -210,6 +220,36 @@ python3 skills/phaselens/scripts/valuation.py \
 | `--years` | length of the first stage | `10` |
 
 It works on an **equity basis**: owner FCF has already paid interest, so it is compared with market cap and debt is never subtracted twice. At a 10% return and 3% terminal growth, the end value is about 14.7× year-ten cash flow. That is deliberately conservative; for A-moat compounders a 9% hurdle is a defensible adjustment, used instead of a smaller margin of safety, not as well as one.
+
+## What it costs to run
+
+PhaseLens itself is free. You pay for the Claude usage the analysis takes, and most of that comes from **research**: every web search and filing Claude reads is added to the conversation, and each later step re-reads it. More searching means a higher cost.
+
+The figures below are real runs from September 2026, billed at API rates. Claude Sonnet 5 did the analysis, and Claude Haiku 4.5 summarized the web pages it fetched.
+
+| What you ask | Example | Cost | Time | Why |
+|---|---|:-:|:-:|---|
+| Numbers you supply, no web research | "Price $48, tangible book $36, ROTCE 14%… is it a buy?" | **$0.13–0.25** | under 1 min | no searching; only the reasoning and the calculator |
+| Quick take on a simple, well-documented company | `Quick take: UBER`, `Quick take: COST` | **$0.50–0.65** | 2 min | about 10 searches: price, latest 10-Q, 10-K |
+| Quick take on a typical large company | Mastercard, Amazon, Realty Income, SpaceX | **$0.60–0.95** | 2–4 min | 15–20 searches and page reads; a special case such as a REIT or a new IPO adds a few more |
+| Quick take on a complicated company | Alphabet, JPMorgan, Tesla | **$1.10–1.70** | 4–6 min | 25–35 lookups to untangle investment gains, bank capital, or share awards |
+| Full memo, every input rebuilt from primary filings | Mastercard, full owner-FCF rebuild and verification | **about $3** | 10+ min | reads several 10-Q and 10-K cash-flow statements line by line, and checks each figure twice |
+| Market scan of 10–15 companies | the September 2026 scan | **roughly $15–45** | an hour or more | the per-company cost × the number of companies |
+
+Across ten live quick takes, the median was **about $0.90**. Tokens written by the model were a small part of each bill. Most of the cost came from re-reading 0.8–2 million tokens of accumulated context, plus Haiku summarizing the pages.
+
+**Your bill may be different:**
+
+- **Plan.** On a Pro, Max, Team or Enterprise plan, a run draws on your plan's usage limits rather than producing a separate charge. With an API key, or on usage billed in the Console, you pay the token cost directly.
+- **Model.** A larger model such as Opus costs more per token than Sonnet. Haiku is cheaper but less careful with filings.
+- **Company.** A company with many adjustments costs more because Claude has to look up more: investment gains, insurance float, capex cycles, bank capital, or recent deals.
+
+**Ways to spend less:**
+
+1. Start with `Quick take: TICKER`, and ask for the full memo only for names you'd actually buy.
+2. Paste in numbers you already have, such as the price, operating cash flow, capex and SBC. Claude then checks them instead of searching for them.
+3. Ask about one company per conversation. A long thread makes every step re-read everything before it.
+4. Check what a run cost afterwards. In Claude Code, use `/cost`, or `/usage` on a plan.
 
 ## What's inside
 
