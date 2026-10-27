@@ -12,6 +12,8 @@
 - Utilities
 - Foreign listings and ADRs
 - Large net cash or heavy debt
+- Special situations, takeovers and activists
+- Hidden assets and sum of the parts
 - Choosing bear / base / bull growth
 
 ## Negative or erratic FCF
@@ -36,8 +38,10 @@ FCF and enterprise value don't apply.
 
 ## Insurers
 
-- Value on price / book and ROE, with combined ratio (underwriting profit), reserve development (are past reserves proving adequate?) and investment-portfolio risk.
+- Value on **justified price / book** = (ROE − g) / (cost of equity − g), times book value per share — the same formula as banks. Use a through-cycle ROE that includes a normal catastrophe year, not the best year. Run it with `scenarios.py book`.
+- Check combined ratio (underwriting profit), reserve development (are past reserves proving adequate?), catastrophe concentration and reinsurance retention, and investment-portfolio risk.
 - Float is an asset only if underwriting is profitable over a cycle.
+- Operating cash flow includes reserve growth; it is not owner earnings.
 
 ## REITs
 
@@ -61,6 +65,17 @@ FCF and enterprise value don't apply.
 - The helper works on an equity basis: owner FCF already reflects interest paid and earned, so debt is not subtracted again.
 - **Heavy debt:** check that FCF covers interest comfortably and that maturities can be refinanced. A leveraged company needs a wider margin of safety.
 - **Large excess cash that earns little:** you may add excess cash per share to the value, but say so explicitly.
+
+## Special situations, takeovers and activists
+
+- Value on what a buyer would pay: EBITDA × a deal multiple + net cash, with `scenarios.py ebitda` (use `--years 0` for a sale today, or a future EBITDA and `--years N`).
+- Count receivables owed from past asset sales (earn-outs, holdbacks) as cash only at fair value.
+- An activist's average cost (from the 13D) is a useful reference, not a floor.
+
+## Hidden assets and sum of the parts
+
+- Value each asset separately: price per unit (spectrum per MHz-POP, land per acre, a private stake at its latest round), minus costs to realize it, times a time factor for how long monetization takes, plus net cash, minus cash burn until then.
+- State the implied price per unit today; that number is the thesis.
 
 ## Choosing bear / base / bull growth
 

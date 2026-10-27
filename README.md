@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/github/license/arjunpycFlow/phaselens?style=flat-square&color=0F766E)](LICENSE)
 [![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757?style=flat-square)](#install)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-SKILL.md-6E56CF?style=flat-square)](skills/phaselens/SKILL.md)
-[![Tests](https://img.shields.io/badge/tests-62%20passing-1A7F37?style=flat-square)](tests/test_valuation.py)
+[![Tests](https://img.shields.io/badge/tests-83%20passing-1A7F37?style=flat-square)](tests/test_valuation.py)
 [![Dependencies](https://img.shields.io/badge/dependencies-none-1A7F37?style=flat-square)](SECURITY.md)
 
 **[Install](#install)** · **[How it works](#how-it-works)** · **[Example](examples/uber-2026-09.md)** · **[Evals](#tested-not-just-claimed)** · **[FAQ](#faq)**
@@ -164,15 +164,16 @@ The **margin of safety scales with predictability, not excitement:** 0–10% for
 
 ## Tested, not just claimed
 
-**The math.** 62 unit tests check `valuation.py` against closed-form results: the Gordon-growth special case, a zero-growth perpetuity, reverse-DCF round trips, band ordering, and clean refusals of bad inputs such as negative cash flow. They run in CI on every push.
+**The math.** 83 unit tests check `valuation.py` and `scenarios.py` against closed-form results: the Gordon-growth special case, a zero-growth perpetuity, reverse-DCF round trips, justified price/book, price/sales and EV/EBITDA exits, the float sensitivity, band ordering, weekend price dates, and clean refusals of bad inputs such as negative cash flow. They run in CI on every push.
 
-**The behavior.** Five cases in [`evals/`](evals) run through [`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals). Each case runs three times **with** PhaseLens and three times **without** it, so the difference shows what the skill adds:
+**The behavior.** Six cases in [`evals/`](evals) run through [`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals). Each case runs three times **with** PhaseLens and three times **without** it, so the difference shows what the skill adds:
 
 | Case | With | Without | What it checks |
 |---|:-:|:-:|---|
 | Buy price from supplied numbers | **0.89** | 0.00 | phase, reverse DCF, correct starter and full-position prices, triggers |
 | Hyper-growth company, negative FCF | **1.00** | 0.83 | values on price/sales and doesn't force a DCF |
 | Regional bank | 1.00 | 1.00 | uses price/tangible book, not FCF |
+| Small insurer (new in 1.3.0) | **1.00** | — | justified price/book with a through-cycle ROE, not cash flow that includes reserve growth |
 | Price far above the bull case | 1.00 | 1.00 | says trim, not buy |
 | Off-topic personal-finance question | 1.00 | 1.00 | the skill stays out of the way |
 
@@ -218,6 +219,26 @@ python3 skills/phaselens/scripts/valuation.py \
 | `--rate` | required return | `0.10` |
 | `--terminal` | growth after year ten | `0.03` |
 | `--years` | length of the first stage | `10` |
+| `--float` | float inflow (insurance reserves, customer deposits) already removed from `--fcf`; adds half-kept and fully-kept sensitivities | `0` |
+| `--asof` | price date `YYYY-MM-DD`; weekend dates are rejected | none |
+
+For a shrinking business, pass a negative `--terminal` (for example `-0.02`).
+
+### When a DCF doesn't fit
+
+`scenarios.py` prints the same bands for three other methods:
+
+```bash
+# young growth companies: five-year price/sales exit
+python3 skills/phaselens/scripts/scenarios.py sales --price 40 --shares 570 --revenue 707 \
+  --growth 0.33 0.58 0.83 --exit 2 3 4 --dilution 0.05 --mos 0
+# takeovers, activists, cyclicals: EV/EBITDA exit
+python3 skills/phaselens/scripts/scenarios.py ebitda --price 4.53 --shares 88.5 \
+  --ebitda 30 65 95 --exit 8 12 14 --net-cash 63.6 --years 4 --mos 0.30
+# banks and insurers: justified price/book = (ROE − g) / (COE − g)
+python3 skills/phaselens/scripts/scenarios.py book --price 343 --book 113.35 \
+  --roe 0.14 0.20 0.22 --coe 0.11 0.10 0.095 --g 0.03 0.04 0.045 --mos 0.10
+```
 
 It works on an **equity basis**: owner FCF has already paid interest, so it is compared with market cap and debt is never subtracted twice. At a 10% return and 3% terminal growth, the end value is about 14.7× year-ten cash flow. That is deliberately conservative; for A-moat compounders a 9% hurdle is a defensible adjustment, used instead of a smaller margin of safety, not as well as one.
 
@@ -259,9 +280,11 @@ phaselens/
 │   ├── plugin.json            # plugin manifest
 │   └── marketplace.json       # this repo is its own marketplace
 ├── skills/phaselens/
-│   ├── SKILL.md               # the workflow (153 lines)
+│   ├── SKILL.md               # the workflow
 │   ├── scripts/valuation.py   # reverse DCF, scenarios, price bands
+│   ├── scripts/scenarios.py   # price/sales, EV/EBITDA and price/book methods
 │   └── references/            # read only when needed
+│       ├── idea-sourcing.md
 │       ├── lifecycle-phases.md
 │       ├── margin-of-safety.md
 │       ├── red-flags-and-selling.md

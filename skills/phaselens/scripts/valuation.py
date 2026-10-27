@@ -18,6 +18,7 @@ Example
 Units: --shares in millions; --fcf in the same currency millions as the price.
 """
 import argparse
+import datetime
 import json
 import re
 import sys
@@ -114,6 +115,10 @@ def build_parser():
     p.add_argument("--terminal", type=float, default=0.03,
                    help="growth after stage one (default 0.03)")
     p.add_argument("--years", type=int, default=10, help="stage-one length (default 10)")
+    p.add_argument("--float", dest="float_inflow", type=float, default=0.0,
+                   help="TTM float inflow already removed from --fcf (insurance reserves, "
+                        "customer deposits); adds float-kept and half-kept sensitivities")
+    p.add_argument("--asof", help="price date YYYY-MM-DD; rejected if it is a weekend")
     return p
 
 
@@ -134,6 +139,26 @@ def validate(p, a):
         p.error("--terminal must be below --rate and below 8%")
     if max(a.growth) > GROWTH_CEILING or min(a.growth) < GROWTH_FLOOR:
         p.error("--growth values must be between -0.5 and 1.0")
+    if a.float_inflow < 0:
+        p.error("--float is the inflow removed from --fcf and must be zero or more")
+    if a.asof:
+        try:
+            day = datetime.date.fromisoformat(a.asof)
+        except ValueError:
+            p.error("--asof must be YYYY-MM-DD")
+        if day.weekday() >= 5:
+            p.error(f"--asof {a.asof} is a {day:%A}; use the last completed session's close")
+
+
+def _bands(a, fcf):
+    values = {name: dcf_value(fcf, g, a.rate, a.terminal, a.years) / a.shares
+              for name, g in zip(("bear", "base", "bull"), a.growth)}
+    weighted = sum(SCENARIO_WEIGHTS[k] * v for k, v in values.items())
+    starter = weighted * (1 - a.mos)
+    full = starter * FULL_POSITION_STEP
+    return {"weighted_value": round(weighted, 2), "starter_buy_below": round(starter, 2),
+            "full_position_below": round(full, 2), "trim_above": round(values["bull"], 2),
+            "zone_now": zone_for(a.price, starter, full, weighted, values["bull"])}
 
 
 def run(a):
@@ -160,6 +185,10 @@ def run(a):
         "trim_above": round(values["bull"], 2),
         "discount_to_value_now_pct": round(100 * (weighted - a.price) / weighted, 1),
         "zone_now": zone_for(a.price, starter, full, weighted, values["bull"]),
+        **({"sensitivity_float": {
+            "half_kept": _bands(a, a.fcf + a.float_inflow / 2),
+            "fully_kept": _bands(a, a.fcf + a.float_inflow),
+        }} if a.float_inflow else {}),
     }
 
 

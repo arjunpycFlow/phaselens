@@ -2,6 +2,29 @@
 
 All notable changes to PhaseLens are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] — 2026-10-27
+
+Adds what live use since 1.2.0 showed was missing: a calculator for every method PhaseLens recommends, a decisive rule for float, and a workflow for finding ideas.
+
+### Added
+- **`scripts/scenarios.py`**, which gives the same bands and zones as `valuation.py` for the cases a DCF doesn't fit:
+  - `sales`: a five-year price/sales (or price/gross-profit) exit for Phase 1–2 companies. It also prints the revenue growth today's price needs.
+  - `ebitda`: an EV/EBITDA exit with net cash and dilution, for takeovers, activist situations and cyclicals.
+  - `book`: justified price/book = (ROE − g) / (COE − g), for banks and insurers.
+  - Until now these were done by hand, and hand math is where errors crept in.
+- **`valuation.py --float`.** Pass the float inflow you removed (insurance reserves, customer deposits) and the helper also prints half-kept and fully-kept bands. In a live Uber run this one call moved the starter price from $57 to $76.
+- **`valuation.py --asof`**, which rejects weekend price dates.
+- **`references/idea-sourcing.md`**: four independent search tracks (smart-money filings, fundamental inflection, niche-research convergence, structural mispricing), a verification and ranking process, and honest framing for "find me ideas" requests.
+- **Special cases**: insurers valued on justified price/book; special situations, takeovers and activists; hidden assets and sum of the parts.
+- 21 new unit tests (83 in total).
+
+### Changed
+- **Float rule.** Anchor the verdict on the float-removed case. Move to half-kept only when the reserve has held a steady share of revenue for 3+ years and volumes are growing, and state the choice.
+- **Dilution overhang.** In-the-money convertibles, warrants, convertible preferred, mega-grants and unused at-the-market programs are now shown as a per-share sensitivity, without also double-counting the related stock comp. The IREN, Marvell and Lumentum runs needed this.
+- **Decline phase.** Pass a negative `--terminal` so the business keeps shrinking after year ten.
+- **Conflict-of-interest rule.** Disclose any connection between the analyst and the company, for example an AI model and its own developer.
+- The skill description now also triggers on requests for overlooked or undervalued stock ideas.
+
 ## [1.2.0] — 2026-09-27
 
 Fixes from a live accuracy test. Seven real quick takes (UBER, TSLA, SpaceX, GOOGL, AMZN, JPM, O) were checked against SEC filings by an independent reviewer. The calculator was exact in every run. These rules close the gaps the test found:

@@ -1,6 +1,6 @@
 ---
 name: phaselens
-description: Analyzes a listed company the way a long-term owner would and returns a verdict with exact starter-buy, full-position, hold and trim prices. Places the company in one of five lifecycle phases, lets the phase choose the metrics and valuation method, and runs a reverse DCF. Use when someone names a stock, ticker or company — in any sector, including banks, insurers and REITs — and asks whether to buy, hold or sell it, whether it is cheap or expensive, when to buy, or at what price.
+description: Analyzes a listed company the way a long-term owner would and returns a verdict with exact starter-buy, full-position, hold and trim prices. Places the company in one of five lifecycle phases, lets the phase choose the metrics and valuation method, and runs a reverse DCF. Use when someone names a stock, ticker or company — in any sector, including banks, insurers and REITs — and asks whether to buy, hold or sell it, whether it is cheap or expensive, when to buy, or at what price. Also use when someone asks for overlooked or undervalued stock ideas.
 ---
 
 # PhaseLens
@@ -48,11 +48,13 @@ Record the raw numbers in a working file and compute from it. Mark anything unve
 | Net cash / (net debt) | | latest balance sheet | cash + marketable securities − total debt, from the balance sheet |
 | **= Owner FCF** | | | arithmetic shown |
 
+**Dilution overhang.** The share count above is today's. Also list in-the-money convertibles, warrants, convertible preferred, unvested mega-grants and unused at-the-market programs, and show the value per share with them included as a sensitivity. Don't also deduct the related stock comp twice.
+
 Then three checks: price × diluted shares within about 3% of a reported market cap on the same date (if not, the share count is wrong); TTM = latest fiscal year + year-to-date − prior year-to-date; and every balance-sheet claim in the memo ("net cash", "cash on hand") matches the latest balance sheet, not an older one. Fix any mismatch before valuing. "None" is not an acceptable one-offs entry until the working-capital row has been filled in.
 
 One-off rules — apply them the same way to every company, and name each adjustment:
 
-- **Float that reverses if growth stops** (customer deposits, insurance and claims reserves, deferred-revenue jumps): remove the TTM inflow from the base case, and show the value with it left in as a labeled sensitivity. If the call changes the verdict, say so.
+- **Float that reverses if growth stops** (customer deposits, insurance and claims reserves, deferred-revenue jumps): remove the TTM inflow from `--fcf` and pass it as `--float`; the helper then shows half-kept and fully-kept sensitivities. Anchor the verdict on the float-removed case. Move the anchor to half-kept only if the reserve has held a steady share of revenue for three or more years and volumes are still growing — and say so. If the call changes the verdict, say so.
 - **Tax timing** (a deferred-tax or tax-payable swing far outside its 3-year range, a one-time tax-law benefit, or a final installment of a fixed tax schedule): reset to a normal year.
 - **Cash that belongs to others** (payouts to minority partners in a consolidated business): deduct it.
 - **Legal settlements, termination fees, asset-sale taxes:** remove. If a settlement is funded by a mechanism that already dilutes shareholders (for example an escrow paid by cutting share conversion rates), add it back and explain why.
@@ -128,10 +130,10 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/valuation.py --price 69.62 --shares 2043 --f
 
 **Growth-capex surge in a Phase 3–4 business.** When a profitable company's capex runs above 1.5× depreciation and that — not losses — is what depresses or turns negative its owner FCF, neither the trough FCF nor price/sales is the right base. Run the script twice and show both: (1) TTM owner FCF, labeled "trough"; (2) owner earnings = OCF − depreciation (as maintenance-capex proxy) − SBC, labeled "if the build-out earns its cost of capital". Cross-check with a P/E on **normalized** EPS (strip every mark-to-market investment gain in each of the four TTM quarters, not just the latest). Anchor the bands to (1) unless there is disclosed evidence the new capacity is already earning — backlog, contracted revenue, segment margins — and say which you chose. Never value a company with positive operating income on price/sales.
 
-**Phases 1–2 (and any company with negative owner FCF from losses) — no DCF, no script.** Don't discount projected cash flows; the inputs don't exist yet. Instead:
+**Phases 1–2 (and any company with negative owner FCF from losses) — no DCF.** Don't discount projected cash flows; the inputs don't exist yet. Instead:
 
 1. Today's price/sales and price/gross profit against the company's own history and 2–3 peers.
-2. A five-year scenario: bear / base / bull revenue × a mature-company price/sales (or price/gross-profit) multiple → future market cap, discounted back five years at the hurdle, less dilution.
+2. A five-year scenario: bear / base / bull revenue × a mature-company price/sales (or price/gross-profit) multiple → future market cap, discounted back five years at the hurdle, less dilution. Run it with `python3 ${CLAUDE_SKILL_DIR}/scripts/scenarios.py sales …`; it also prints the revenue growth today's price needs.
 3. Size smaller rather than demand a bigger discount. State plainly that the value is a range, not a number.
 
 **The bands:**
@@ -143,6 +145,8 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/valuation.py --price 69.62 --shares 2043 --f
 | Hold | starter → weighted value | no new money |
 | Fair | weighted value → bull value | hold; no new money |
 | Trim / pass | above bull value | no plausible future justifies the price — trim, or pass if not owned |
+
+**Other methods, same bands.** `scenarios.py ebitda` values special situations, takeover targets and cyclicals (future EBITDA × exit multiple + net cash, discounted); `scenarios.py book` values banks and insurers on justified price/book. **Decline (Phase 5):** pass a negative `--terminal` to `valuation.py` (for example −0.02) so the business keeps shrinking after year ten. Each prints the same bands and zone as `valuation.py`. Details: [references/special-cases.md](references/special-cases.md).
 
 If today's price is above the bull value, the verdict is Pass (or Trim if owned) and the buy prices are reference levels, not actions. Detail and the dividend-safety score: [references/margin-of-safety.md](references/margin-of-safety.md).
 
@@ -177,6 +181,9 @@ Next catalyst / re-check date: __
 ## Rules
 
 - Never predict prices or dates; give scenario ranges with their assumptions.
+- Pass `--asof` with the price date; the helper rejects weekend dates.
+- Disclose any conflict of interest: if a thesis rests on a company connected to whoever is running the analysis (for an AI model, its own developer), say so and leave the call to the investor.
+- Asked for stock ideas rather than one stock? Follow [references/idea-sourcing.md](references/idea-sourcing.md), then run every finalist through this checklist.
 - No technical indicators as the basis for a call.
 - A lower price adds value only if the thesis still holds at that price.
 - State the hurdle rate and margin of safety used. A margin of safety outside the 7e row for the business needs a one-line reason.
